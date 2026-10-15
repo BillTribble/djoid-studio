@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DJOID Studio — AI DJ set &amp; Rekordbox XML studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link rel="stylesheet" href="gm3-color-tokens.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Sticky Top App Bar (<= 64px on desktop, 56px on mobile) -->
+  <header class="top-app-bar" id="top-app-bar">
+    <div class="brand-cluster">
+      <div class="brand-mark" aria-hidden="true">
+        <span class="material-symbols-outlined">graphic_eq</span>
+      </div>
+      <h1 class="brand-title">DJOID Studio</h1>
+      <span class="badge badge-blue hide-on-mobile" id="build-badge">Harmonic &amp; XML engine</span>
+    </div>
+
+    <div class="top-bar-actions">
+      <button type="button" class="btn-tonal" id="btn-rekordbox-guide" aria-label="How Rekordbox XML works">
+        <span class="material-symbols-outlined">menu_book</span>
+        <span class="hide-on-mobile">Rekordbox XML guide</span>
+      </button>
+      <button type="button" class="btn" id="btn-export-xml" aria-label="Export Rekordbox XML">
+        <span class="material-symbols-outlined">download</span>
+        <span>Export XML</span>
+      </button>
+      <button type="button" class="icon-btn" id="btn-theme-toggle" title="Toggle light or dark theme" aria-label="Toggle light or dark theme">
+        <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="workspace-shell">
+    <!-- Audio DSP & Rekordbox XML Importer Bar -->
+    <section class="surface-card" aria-labelledby="heading-importer">
+      <div class="import-dropzone" id="dropzone-area">
+        <div class="card-title-group">
+          <span class="material-symbols-outlined">library_music</span>
+          <h2 class="section-heading" id="heading-importer">Audio DSP &amp; Rekordbox XML intake</h2>
+          <span class="badge badge-green" id="library-count-badge">24 tracks ready</span>
+        </div>
+        <div class="badge-row">
+          <input type="file" id="input-audio-file" accept=".mp3,.wav,.flac,.ogg,.m4a,audio/*" hidden>
+          <input type="file" id="input-xml-file" accept=".xml,text/xml,application/xml" hidden>
+          <button type="button" class="btn-tonal" id="btn-upload-audio">
+            <span class="material-symbols-outlined">audio_file</span>
+            Analyze audio file
+          </button>
+          <button type="button" class="btn-outlined" id="btn-upload-xml">
+            <span class="material-symbols-outlined">upload_file</span>
+            Import rekordbox.xml
+          </button>
+          <button type="button" class="btn-outlined" id="btn-import-sample-xml">
+            <span class="material-symbols-outlined">playlist_add</span>
+            Load sample XML tracks
+          </button>
+          <button type="button" class="btn-outlined" id="btn-export-m3u8">
+            <span class="material-symbols-outlined">queue_music</span>
+            Export M3U8
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top Bento Grid: Energy-Curve Set Solver (7/12) + 2D Vibe Map & A* Bridge Finder (5/12) -->
+    <section class="bento-top-grid">
+      <!-- Left: Energy-Curve Set Arc Drawer & Beam-Search Solver -->
+      <article class="surface-card" aria-labelledby="heading-solver">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h2 class="card-title" id="heading-solver">Energy-curve set arc &amp; beam solver</h2>
+          </div>
+          <nav class="m3-pill-tabs gm3-connected-dsp" role="tablist" aria-label="Energy curve presets" id="preset-tabs">
+            <button type="button" class="m3-pill-tab active" role="tab" aria-selected="true" data-preset="warmup_to_peak" id="tab-preset-warmup">Warm-up to peak</button>
+            <button type="button" class="m3-pill-tab" role="tab" aria-selected="false" data-preset="sunrise_journey" id="tab-preset-sunrise">Sunrise</button>
+            <button type="button" class="m3-pill-tab" role="tab" aria-selected="false" data-preset="double_peak" id="tab-preset-double">Double-peak</button>
+            <button type="button" class="m3-pill-tab" role="tab" aria-selected="false" data-preset="afterhours_hypnotic" id="tab-preset-afterhours">Afterhours</button>
+          </nav>
+        </div>
+
+        <!-- 3 Minimal 30x30px 270-Degree Rotary Encoders (/billskill §20) -->
+        <div class="rotary-controls-strip">
+          <div class="control-row has-rotary-dial" id="row-dial-harmonic">
+            <div class="rotary-dial-widget" id="dial-harmonic" role="slider" tabindex="0"
+                 aria-label="Harmonic strictness" aria-valuemin="0" aria-valuemax="100" aria-valuenow="82"
+                 data-param="harmonic_strictness" data-min="0" data-max="100" data-step="2" data-default="82" data-unit="%">
+              <svg class="rotary-dial-svg" viewBox="0 0 56 56">
+                <path class="rotary-dial-track-arc" id="track-arc-harmonic"></path>
+                <path class="rotary-dial-value-arc" id="value-arc-harmonic"></path>
+              </svg>
+            </div>
+            <div class="control-label-line">
+              <label for="input-harmonic">Harmonic lock</label>
+              <span class="control-value" id="val-harmonic">82%</span>
+            </div>
+            <input type="range" id="input-harmonic" min="0" max="100" value="82">
+          </div>
+
+          <div class="control-row has-rotary-dial" id="row-dial-bpm">
+            <div class="rotary-dial-widget" id="dial-bpm" role="slider" tabindex="0"
+                 aria-label="BPM tolerance" aria-valuemin="1" aria-valuemax="10" aria-valuenow="3.5"
+                 data-param="bpm_tolerance" data-min="1" data-max="10" data-step="0.5" data-default="3.5" data-unit=" BPM">
+              <svg class="rotary-dial-svg" viewBox="0 0 56 56">
+                <path class="rotary-dial-track-arc" id="track-arc-bpm"></path>
+                <path class="rotary-dial-value-arc" id="value-arc-bpm"></path>
+              </svg>
+            </div>
+            <div class="control-label-line">
+              <label for="input-bpm">BPM tolerance</label>
+              <span class="control-value" id="val-bpm">±3.5 BPM</span>
+            </div>
+            <input type="range" id="input-bpm" min="1" max="10" step="0.5" value="3.5">
+          </div>
+
+          <div class="control-row has-rotary-dial" id="row-dial-energy">
+            <div class="rotary-dial-widget" id="dial-energy" role="slider" tabindex="0"
+                 aria-label="Energy adherence" aria-valuemin="0" aria-valuemax="100" aria-valuenow="85"
+                 data-param="energy_adherence" data-min="0" data-max="100" data-step="5" data-default="85" data-unit="%">
+              <svg class="rotary-dial-svg" viewBox="0 0 56 56">
+                <path class="rotary-dial-track-arc" id="track-arc-energy"></path>
+                <path class="rotary-dial-value-arc" id="value-arc-energy"></path>
+              </svg>
+            </div>
+            <div class="control-label-line">
+              <label for="input-energy">Energy weight</label>
+              <span class="control-value" id="val-energy">85%</span>
+            </div>
+            <input type="range" id="input-energy" min="0" max="100" value="85">
+          </div>
+        </div>
+
+        <!-- Interactive 8-Slot Energy Curve Drawer -->
+        <div class="arc-canvas-wrap">
+          <div class="arc-bars-grid" id="arc-bars-grid" aria-label="Target and solved energy slots"></div>
+        </div>
+
+        <div class="badge-row" id="solver-metrics-row">
+          <span class="badge badge-green" id="metric-set-score">Set compatibility: 92.4%</span>
+          <span class="badge badge-blue" id="metric-harmonic-flow">Harmonic flow: 95.0%</span>
+          <span class="badge badge-teal" id="metric-bpm-jump">Max tempo step: 2.0 BPM</span>
+          <span class="badge badge-purple" id="metric-duration">Runtime: 49m 18s</span>
+        </div>
+      </article>
+
+      <!-- Right: Interactive 2D Vibe Map & A* Bridge Pathfinder -->
+      <article class="surface-card" aria-labelledby="heading-vibe-map">
+        <div class="card-header">
+          <h2 class="card-title" id="heading-vibe-map">2D vibe map &amp; A* bridge finder</h2>
+          <nav class="m3-pill-tabs gm3-connected-dsp" role="tablist" aria-label="Vibe map color mode" id="vibe-mode-tabs">
+            <button type="button" class="m3-pill-tab active" role="tab" aria-selected="true" data-mode="camelot" id="tab-vibe-camelot">Camelot</button>
+            <button type="button" class="m3-pill-tab" role="tab" aria-selected="false" data-mode="energy" id="tab-vibe-energy">Energy</button>
+          </nav>
+        </div>
+
+        <div class="vibe-svg-container">
+          <svg class="vibe-svg" id="vibe-map-svg" viewBox="0 0 520 260" role="img" aria-label="2D library vibe and harmonic graph"></svg>
+        </div>
+
+        <div class="bridge-controls-row">
+          <select class="m3-input field-select" id="select-bridge-start" aria-label="Bridge start track"></select>
+          <select class="m3-input field-select" id="select-bridge-target" aria-label="Bridge target track"></select>
+          <button type="button" class="btn-tonal" id="btn-find-bridge">
+            <span class="material-symbols-outlined">route</span>
+            Find bridge
+          </button>
+        </div>
+
+        <div class="nested-card" id="bridge-result-box"></div>
+      </article>
+    </section>
+
+    <!-- Bottom Bento Grid: Curated Set Tracklist (7/12) + Dual-Deck Waveform & XML Studio (5/12) -->
+    <section class="bento-bottom-grid">
+      <!-- Left: Solved Set Sequence with AI Mix Coaching -->
+      <article class="surface-card" aria-labelledby="heading-setlist">
+        <div class="card-header">
+          <h2 class="card-title" id="heading-setlist">Solved setlist &amp; mix coaching</h2>
+          <div class="input-wrapper">
+            <input type="text" class="m3-input" id="input-playlist-name" value="DJOID Studio AI Set" placeholder="Rekordbox playlist name" aria-label="Rekordbox playlist name">
+            <button type="button" class="input-clear-btn visible" data-clear-for="input-playlist-name" aria-label="Clear playlist name">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="set-timeline-list" id="set-timeline-list"></div>
+      </article>
+
+      <!-- Right: Dual-Deck Waveform & Hot Cue Previewer + Rekordbox XML Inspector -->
+      <div class="deck-stack">
+        <article class="surface-card" aria-labelledby="heading-previewer">
+          <div class="card-header">
+            <h2 class="card-title" id="heading-previewer">Dual-deck waveform &amp; Hot Cue previewer</h2>
+            <button type="button" class="btn-tonal" id="btn-play-transition">
+              <span class="material-symbols-outlined" id="icon-play-transition">play_arrow</span>
+              <span id="label-play-transition">Audition mix</span>
+            </button>
+          </div>
+
+          <div class="deck-card" id="deck-a-card">
+            <div class="deck-header">
+              <div class="badge-row">
+                <span class="badge badge-blue">Deck A (Outgoing)</span>
+                <strong id="deck-a-title">Nocturne in Glass</strong>
+              </div>
+              <span class="badge badge-green" id="deck-a-meta">2A • 120.0 BPM</span>
+            </div>
+            <svg class="waveform-svg" id="waveform-svg-a" viewBox="0 0 520 76" preserveAspectRatio="none" aria-label="Deck A 3-band waveform and Hot Cues"></svg>
+            <div class="cue-pills-row" id="deck-a-cues"></div>
+          </div>
+
+          <div class="deck-card" id="deck-b-card">
+            <div class="deck-header">
+              <div class="badge-row">
+                <span class="badge badge-purple">Deck B (Incoming)</span>
+                <strong id="deck-b-title">Mirage Protocol</strong>
+              </div>
+              <span class="badge badge-teal" id="deck-b-meta">3A • 122.0 BPM</span>
+            </div>
+            <svg class="waveform-svg" id="waveform-svg-b" viewBox="0 0 520 76" preserveAspectRatio="none" aria-label="Deck B 3-band waveform and Hot Cues"></svg>
+            <div class="cue-pills-row" id="deck-b-cues"></div>
+          </div>
+        </article>
+
+        <!-- Live Rekordbox XML (<DJ_PLAYLISTS Version="1.0.0">) Inspector Card -->
+        <article class="surface-card" aria-labelledby="heading-xml-inspector">
+          <div class="card-header">
+            <h2 class="card-title" id="heading-xml-inspector">Rekordbox XML schema output</h2>
+            <div class="badge-row">
+              <button type="button" class="btn-outlined" id="btn-copy-xml">
+                <span class="material-symbols-outlined">content_copy</span>
+                Copy XML
+              </button>
+              <button type="button" class="btn-text" id="btn-open-guide-inline">
+                <span class="material-symbols-outlined">help</span>
+                How to import
+              </button>
+            </div>
+          </div>
+          <pre class="xml-code-box" id="xml-preview-code" aria-label="Generated Rekordbox XML preview"></pre>
+        </article>
+      </div>
+    </section>
+
+    <!-- Full 24-Track Club Library Table -->
+    <section class="surface-card" aria-labelledby="heading-library">
+      <div class="card-header">
+        <h2 class="card-title" id="heading-library">Track collection &amp; cue analysis</h2>
+        <div class="badge-row">
+          <div class="input-wrapper">
+            <input type="text" class="m3-input" id="input-library-search" placeholder="Filter by title, artist, or key" aria-label="Filter library tracks">
+            <button type="button" class="input-clear-btn" data-clear-for="input-library-search" aria-label="Clear search filter">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          <select class="m3-input field-select" id="select-library-filter" aria-label="Filter by energy tier">
+            <option value="all">All energy levels (2–10)</option>
+            <option value="warmup">Warm-up &amp; deep (E2–E5)</option>
+            <option value="groovy">Groove &amp; melodic (E6–E8)</option>
+            <option value="peak">Peak-hour techno (E9–E10)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-scroll-wrap">
+        <table class="gm3-table" id="library-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Track &amp; artist</th>
+              <th>Genre</th>
+              <th>Camelot</th>
+              <th>BPM</th>
+              <th>Energy</th>
+              <th>Hot Cues A–D</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="library-table-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Step-by-Step "How Rekordbox XML Works & How to Use in Rekordbox" Modal -->
+  <div class="modal-backdrop" id="modal-rekordbox-guide" role="dialog" aria-modal="true" aria-labelledby="modal-guide-title">
+    <div class="modal-card">
+      <div class="card-header">
+        <div class="card-title-group">
+          <span class="material-symbols-outlined">album</span>
+          <h2 class="card-title" id="modal-guide-title">How Rekordbox XML export works</h2>
+        </div>
+        <button type="button" class="icon-btn" id="btn-close-guide-modal" aria-label="Close Rekordbox guide">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="guide-steps-list">
+        <div class="guide-step-card">
+          <strong>1. What is inside the Rekordbox XML file?</strong>
+          <span>DJOID Studio generates a Pioneer DJ / AlphaTheta spec-compliant <code>&lt;DJ_PLAYLISTS Version="1.0.0"&gt;</code> file containing three core blocks: <code>&lt;COLLECTION&gt;</code> (track file paths, BPM, Camelot <code>Tonality</code>, and LUFS notes), <code>&lt;TEMPO Inizio="..." Bpm="..." Metro="4/4"/&gt;</code> (exact beatgrid anchor), and <code>&lt;POSITION_MARK&gt;</code> entries for color-coded Hot Cues A–D (<code>Num="0".."3"</code>) plus Memory Cues (<code>Num="-1"</code>), followed by your ordered setlist under <code>&lt;PLAYLISTS&gt;</code>.</span>
+        </div>
+
+        <div class="guide-step-card">
+          <strong>2. Connect the XML file in Rekordbox Preferences</strong>
+          <span>Open Pioneer Rekordbox (v6 or v7) and go to <strong>Preferences → Advanced → Database → rekordbox xml</strong>. Under <em>Imported Library</em>, click <strong>Browse</strong> and select the <code>rekordbox.xml</code> file downloaded from DJOID Studio.</span>
+        </div>
+
+        <div class="guide-step-card">
+          <strong>3. Reveal the XML panel in the Rekordbox sidebar</strong>
+          <span>In the left vertical icon rail of Rekordbox (Performance or Export mode), click the <strong>rekordbox xml</strong> icon (if hidden, enable <strong>View → Layout → rekordbox xml</strong> in the top menu bar).</span>
+        </div>
+
+        <div class="guide-step-card">
+          <strong>4. Import playlist &amp; Hot Cues A–D to your Collection</strong>
+          <span>Expand <strong>rekordbox xml → Playlists → DJOID Studio AI Set</strong>, right-click the playlist, and choose <strong>Import To Collection</strong>. When you load any track to a deck or export to USB for CDJs/XDJs, Hot Cues A (Intro), B (Buildup), C (Drop), and D (Mix Out) and the beatgrid lock load onto your performance pads automatically.</span>
+        </div>
+      </div>
+
+      <div class="card-header">
+        <span class="badge badge-green">Compatible with Rekordbox 5, 6 &amp; 7 + CDJ-3000 / XDJ</span>
+        <div class="badge-row">
+          <button type="button" class="btn-tonal" id="btn-modal-download-xml">
+            <span class="material-symbols-outlined">download</span>
+            Download rekordbox.xml
+          </button>
+          <button type="button" class="btn-outlined" id="btn-modal-done">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagnostics Banner (/billskill Rule 7) -->
+  <div class="diag-error-banner" id="diag-error-banner" role="status" aria-live="polite">
+    <span class="material-symbols-outlined">info</span>
+    <span id="diag-error-text"></span>
+  </div>
+
+  <script src="audio_engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
