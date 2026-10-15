@@ -260,6 +260,15 @@
     return 'red';
   }
 
+  function esc(val) {
+    return String(val ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   /* ------------------------------------------------------------------------
      Render Interactive 8-Slot Energy Curve Drawer
      ------------------------------------------------------------------------ */
@@ -439,7 +448,7 @@
     const prevTarget = targetSel.value || (state.tracks[18] && state.tracks[18].id);
 
     const html = state.tracks
-      .map((t) => `<option value="${t.id}">${t.camelot} • ${t.bpm} BPM — ${t.title}</option>`)
+      .map((t) => `<option value="${esc(t.id)}">${esc(t.camelot)} • ${esc(t.bpm)} BPM — ${esc(t.title)}</option>`)
       .join('');
     startSel.innerHTML = html;
     targetSel.innerHTML = html;
@@ -457,13 +466,13 @@
       .map((t, idx) => {
         const tone = idx === 0 ? 'blue' : idx === path.length - 1 ? 'purple' : 'green';
         const role = idx === 0 ? 'Start' : idx === path.length - 1 ? 'Target' : `Bridge ${idx}`;
-        return `<span class="badge badge-${tone}">${role}: ${t.title} (${t.camelot} • ${t.bpm} BPM)</span>`;
+        return `<span class="badge badge-${tone}">${role}: ${esc(t.title)} (${esc(t.camelot)} • ${esc(t.bpm)} BPM)</span>`;
       })
       .join('');
 
     box.innerHTML = `
       <div class="badge-row">${chainBadges}</div>
-      <div>${state.bridgeResult.summary || ''}</div>
+      <div>${esc(state.bridgeResult.summary || '')}</div>
     `;
   }
 
@@ -491,8 +500,8 @@
           <div class="coaching-callout">
             <span class="material-symbols-outlined">auto_awesome</span>
             <div>
-              <strong>Transition ${idx}→${idx + 1} (${trans.overall}% • ${trans.harmonic_label}):</strong>
-              ${trans.coaching}
+              <strong>Transition ${idx}→${idx + 1} (${esc(trans.overall)}% • ${esc(trans.harmonic_label)}):</strong>
+              ${esc(trans.coaching)}
             </div>
           </div>
         `;
@@ -511,12 +520,12 @@
           <div class="slot-identity">
             <span class="slot-index-pill">${slotObj.slot}</span>
             <div class="slot-title-block">
-              <span class="slot-track-title">${trk.title}</span>
-              <span class="slot-track-artist">${trk.artist} • ${trk.genre}</span>
+              <span class="slot-track-title">${esc(trk.title)}</span>
+              <span class="slot-track-artist">${esc(trk.artist)} • ${esc(trk.genre)}</span>
             </div>
           </div>
           <div class="badge-row">
-            <span class="badge badge-${camTone}">${trk.camelot} (${trk.musical_key})</span>
+            <span class="badge badge-${camTone}">${esc(trk.camelot)} (${esc(trk.musical_key)})</span>
             <span class="badge badge-blue">${trk.bpm.toFixed(1)} BPM</span>
             <span class="badge badge-${eTone}">Energy ${trk.energy}/10</span>
             ${previewBtnHtml}
@@ -711,16 +720,16 @@
       tr.innerHTML = `
         <td>${trk.track_number}</td>
         <td>
-          <strong>${trk.title}</strong><br>
-          <span>${trk.artist}</span>
+          <strong>${esc(trk.title)}</strong><br>
+          <span>${esc(trk.artist)}</span>
         </td>
-        <td>${trk.genre}</td>
-        <td><span class="badge badge-${camTone}">${trk.camelot} (${trk.musical_key})</span></td>
+        <td>${esc(trk.genre)}</td>
+        <td><span class="badge badge-${camTone}">${esc(trk.camelot)} (${esc(trk.musical_key)})</span></td>
         <td>${trk.bpm.toFixed(1)}</td>
         <td><span class="badge badge-${eTone}">E${trk.energy} (${trk.lufs} LUFS)</span></td>
         <td><div class="badge-row">${cueSummary}</div></td>
         <td>
-          <button type="button" class="btn-outlined" id="btn-seed-${trk.id}">
+          <button type="button" class="btn-outlined" id="btn-seed-${esc(trk.id)}">
             <span class="material-symbols-outlined">play_circle</span>
             Lead set
           </button>
